@@ -1,12 +1,16 @@
+package Engine;
+
 import javax.swing.JFrame;
 
 public class MainFrame extends JFrame{
 	
-	MainPanel mainPanel = new MainPanel();
+	static MainPanel mainPanel = new MainPanel();
 	
 	public MainFrame(){
-		this.setSize(420, 420);
+		this.setSize(1000, 1000);
+		this.setResizable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setTitle("Fractals");
 		this.add(mainPanel);
 		
 		this.setVisible(true);
