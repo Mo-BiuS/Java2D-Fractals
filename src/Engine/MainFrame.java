@@ -2,20 +2,23 @@ package Engine;
 
 import javax.swing.JFrame;
 
+import Engine.Panels.MainPanel;
+
 public class MainFrame extends JFrame{
-	
-	static MainPanel mainPanel = new MainPanel();
+
+	private static final long serialVersionUID = 1L;
+	private MainPanel mainPanel = new MainPanel();
 	
 	public MainFrame(){
-		this.setSize(1000, 1000);
-		this.setResizable(false);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setTitle("Fractals");
-		this.add(mainPanel);
+		super("Fractals");
 		
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setSize(1200, 1000);
+		this.add(mainPanel);
 		this.setVisible(true);
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main(String args[]){
 		MainFrame mainFrame = new MainFrame();
 	}
