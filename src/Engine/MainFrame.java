@@ -1,5 +1,7 @@
 package Engine;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
 import Engine.Panels.MainPanel;
@@ -14,6 +16,7 @@ public class MainFrame extends JFrame{
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(1200, 1000);
+		this.setMinimumSize(new Dimension(800,600));
 		this.add(mainPanel);
 		this.setVisible(true);
 	}

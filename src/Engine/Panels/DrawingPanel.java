@@ -10,131 +10,80 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class DrawingPanel extends JPanel implements ActionListener{
-	
+import Engine.Fractals;
+
+public class DrawingPanel extends JPanel{
+
 	private static final long serialVersionUID = -6274803107403810003L;
-	Timer timer = new Timer(100,this);
+	private Fractals fractal = Fractals.NONE;
 	
 	public DrawingPanel(){
 		this.setMinimumSize(new Dimension(800,800));
-		timer.start();
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		this.setBackground(Color.BLACK);
 		
-		Graphics2D g2D = (Graphics2D)g;
-		g2D.setColor(Color.WHITE);
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.setColor(Color.WHITE);
 		
-		g2D.translate(500,500);
-		drawTreeSouth(70, g2D);
-		drawTreeNorth(70, g2D);
-		drawTreeEast(70, g2D);
-		drawTreeWest(70, g2D);
-	}
-
-
-
-	private void drawTreeSouth(int s, Graphics2D g2d) {
 		
-		if(s > 4) {
-			double r = Math.toRadians(45);
-			int sx = s;
-			int sy = s*2;
-			int s2 = (int) (s*(Math.sqrt(2)/2));
-			
-			g2d.translate(-sx,sy);
-			g2d.rotate(r);
-			drawTreeSouth(s2,g2d);
-			g2d.rotate(-r);
-			g2d.translate(sx,-sy);
-			
-			
-			g2d.translate(sx,sy);
-			g2d.rotate(-r);
-			drawTreeSouth(s2,g2d);
-			g2d.rotate(r);
-			g2d.translate(-sx,-sy);
+		switch (fractal) {
+		case PYTHAGORAS_TREE:
+			g2d.translate(this.getSize().width/2,3*this.getSize().height/4);
+			PythagorasTree(70,g2d);
+			break;
+		case SIERPINSKI_CARPET:
+			SierpinskiCarpet(Math.min(this.getSize().width,this.getSize().height), g2d);
+			break;
+		case NONE:
+			break;
 		}
-		g2d.setColor(new Color(160+s,40,255-s*3));
-		g2d.fillRect(-s-1, -s-1, 2*s+2, 2*s+2);
 	}
-	private void drawTreeNorth(int s, Graphics2D g2d) {
 
-		if(s > 4) {
+	private void PythagorasTree(int initialSize, Graphics2D g2d) {
+		if(initialSize > 4) {
 			double r = Math.toRadians(45);
-			int sx = s;
-			int sy = s*2;
-			int s2 = (int) (s*(Math.sqrt(2)/2));
+			int sx = initialSize;
+			int sy = initialSize*2;
+			int s2 = (int) (initialSize*(Math.sqrt(2)/2));
 			
 			g2d.translate(-sx,-sy);
 			g2d.rotate(-r);
-			drawTreeNorth(s2,g2d);
+			PythagorasTree(s2,g2d);
 			g2d.rotate(r);
 			g2d.translate(sx,sy);
 			
-			g2d.translate(sx,-sy);
-			g2d.rotate(r);
-			drawTreeNorth(s2,g2d);
-			g2d.rotate(-r);
-			g2d.translate(-sx,sy);
-			
-		}
-		g2d.setColor(new Color(160+s,40,255-s*3));
-		g2d.fillRect(-s-1, -s-1, 2*s+2, 2*s+2);
-	}
-	private void drawTreeEast(int s, Graphics2D g2d) {
-
-		if(s > 4) {
-			double r = Math.toRadians(45);
-			int sx = s*2;
-			int sy = s;
-			int s2 = (int) (s*(Math.sqrt(2)/2));
-			
-			g2d.translate(sx,sy);
-			g2d.rotate(r);
-			drawTreeEast(s2,g2d);
-			g2d.rotate(-r);
-			g2d.translate(-sx,-sy);
-			
 			
 			g2d.translate(sx,-sy);
-			g2d.rotate(-r);
-			drawTreeEast(s2,g2d);
 			g2d.rotate(r);
+			PythagorasTree(s2,g2d);
+			g2d.rotate(-r);
 			g2d.translate(-sx,sy);
 		}
-		g2d.setColor(new Color(160+s,40,255-s*3));
-		g2d.fillRect(-s-1, -s-1, 2*s+2, 2*s+2);
+		g2d.setColor(new Color(160+initialSize,40,255-initialSize*3));
+		g2d.fillRect(-initialSize-1, -initialSize-1, 2*initialSize+2, 2*initialSize+2);
 	}
-	private void drawTreeWest(int s, Graphics2D g2d) {
-
-		if(s > 4) {
-			double r = Math.toRadians(45);
-			int sx = s*2;
-			int sy = s;
-			int s2 = (int) (s*(Math.sqrt(2)/2));
+	private void SierpinskiCarpet(int initialSize, Graphics2D g2d) {
+		if(initialSize > 4) {
+			g2d.setColor(Color.BLACK);
+			g2d.fillRect(0, 0, initialSize, initialSize);
 			
-			g2d.translate(-sx,sy);
-			g2d.rotate(-r);
-			drawTreeWest(s2,g2d);
-			g2d.rotate(r);
-			g2d.translate(sx,-sy);
+			g2d.setColor(Color.GRAY);
+			g2d.fillRect(initialSize/3, initialSize/3, initialSize/3, initialSize/3);
 			
-			
-			g2d.translate(-sx,-sy);
-			g2d.rotate(r);
-			drawTreeWest(s2,g2d);
-			g2d.rotate(-r);
-			g2d.translate(sx,sy);
+			for(int  i = 0; i  < 9; i++) {
+				if(i != 4) {
+					g2d.translate((i%3)*initialSize/3,(int)(i/3)*initialSize/3);
+					SierpinskiCarpet(initialSize/3, g2d);
+					g2d.translate(-(i%3)*initialSize/3,-(int)(i/3)*initialSize/3);
+				}
+			}
 		}
-		g2d.setColor(new Color(160+s,40,255-s*3));
-		g2d.fillRect(-s-1, -s-1, 2*s+2, 2*s+2);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		this.repaint();
+	public void setFractals(Fractals fractal) {
+		this.fractal = fractal;
 	}
 }
