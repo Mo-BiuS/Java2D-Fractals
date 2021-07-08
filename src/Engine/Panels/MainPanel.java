@@ -57,6 +57,16 @@ public class MainPanel extends JPanel {
 		});
 		controlPanel.add(SierpinskiButton);
 		
+		JButton GosperButton = new JButton("Gosper curve");
+		SierpinskiButton.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){  
+				drawingPanel.setFractals(Fractals.GOSPER_CURVE);
+				drawingPanel.repaint();
+				
+			}  
+		});
+		controlPanel.add(GosperButton);
+		
 		JButton clearButton = new JButton("Clear");
 		clearButton.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  

@@ -4,18 +4,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import Engine.Fractals;
+import Fractals.Gosper;
+import LSystem.Mot;
+import LSystem.Symbole;
 
 public class DrawingPanel extends JPanel{
 
 	private static final long serialVersionUID = -6274803107403810003L;
-	private Fractals fractal = Fractals.NONE;
+	private Fractals fractal = Fractals.GOSPER_CURVE;
 	
 	public DrawingPanel(){
 		this.setMinimumSize(new Dimension(800,800));
@@ -29,19 +29,24 @@ public class DrawingPanel extends JPanel{
 		g2d.setColor(Color.WHITE);
 		
 		
+		int min = Math.min(this.getSize().width,this.getSize().height);
 		switch (fractal) {
 		case PYTHAGORAS_TREE:
 			g2d.translate(this.getSize().width/2,3*this.getSize().height/4);
 			PythagorasTree(70,g2d);
 			break;
 		case SIERPINSKI_CARPET:
-			SierpinskiCarpet(Math.min(this.getSize().width,this.getSize().height), g2d);
+			SierpinskiCarpet(min, g2d);
+			break;
+		case GOSPER_CURVE:
+			g2d.translate(min/2,0);
+			GosperCurve(40, 1 ,g2d);
 			break;
 		case NONE:
 			break;
 		}
 	}
-
+	
 	private void PythagorasTree(int initialSize, Graphics2D g2d) {
 		if(initialSize > 4) {
 			double r = Math.toRadians(45);
@@ -79,6 +84,28 @@ public class DrawingPanel extends JPanel{
 					SierpinskiCarpet(initialSize/3, g2d);
 					g2d.translate(-(i%3)*initialSize/3,-(int)(i/3)*initialSize/3);
 				}
+			}
+		}
+	}
+	private void GosperCurve(int s, int n, Graphics2D g2d) {
+		Mot mot = Gosper.getMot(n);
+		
+		for(Symbole symbole : mot.mot) {
+			switch(symbole.s) {
+			case 'A':
+				g2d.drawLine(0, 0, 0, s);
+				g2d.translate(0,s);
+				break;
+			case 'B':
+				g2d.drawLine(0, 0, 0, s);
+				g2d.translate(0,s);
+				break;
+			case '+':
+				g2d.rotate(Math.toRadians(60));
+				break;
+			case '-':
+				g2d.rotate(Math.toRadians(-60));
+				break;
 			}
 		}
 	}
